@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
-use App\Enums\NotificationChannel;
-use App\Enums\NotificationPriority;
-use App\Enums\NotificationStatus;
+use App\Enums\NotificationChannelEnum;
+use App\Enums\NotificationPriorityEnum;
+use App\Enums\NotificationStatusEnum;
 use App\Models\Notification;
 use App\Models\NotificationBulk;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -20,8 +20,8 @@ class NotificationFactory extends Factory
 
     public function definition(): array
     {
-        $channel = fake()->randomElement(NotificationChannel::cases());
-        $recipient = $channel === NotificationChannel::Sms
+        $channel = fake()->randomElement(NotificationChannelEnum::cases());
+        $recipient = $channel === NotificationChannelEnum::Sms
             ? fake()->e164PhoneNumber()
             : fake()->safeEmail();
 
@@ -29,8 +29,8 @@ class NotificationFactory extends Factory
             'bulk_id' => NotificationBulk::factory(),
             'recipient_id' => $recipient,
             'channel' => $channel,
-            'priority' => NotificationPriority::Marketing,
-            'status' => NotificationStatus::Queued,
+            'priority' => NotificationPriorityEnum::Marketing,
+            'status' => NotificationStatusEnum::Queued,
             'attempts' => 0,
             'last_error' => null,
             'payload' => null,
@@ -40,7 +40,7 @@ class NotificationFactory extends Factory
     public function sent(): self
     {
         return $this->state(fn () => [
-            'status' => NotificationStatus::Sent,
+            'status' => NotificationStatusEnum::Sent,
             'sent_at' => now(),
         ]);
     }
@@ -48,7 +48,7 @@ class NotificationFactory extends Factory
     public function delivered(): self
     {
         return $this->state(fn () => [
-            'status' => NotificationStatus::Delivered,
+            'status' => NotificationStatusEnum::Delivered,
             'sent_at' => now()->subSecond(),
             'delivered_at' => now(),
         ]);
@@ -57,7 +57,7 @@ class NotificationFactory extends Factory
     public function failed(string $error = 'provider error'): self
     {
         return $this->state(fn () => [
-            'status' => NotificationStatus::Failed,
+            'status' => NotificationStatusEnum::Failed,
             'failed_at' => now(),
             'last_error' => $error,
         ]);

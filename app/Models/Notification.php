@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use App\Enums\NotificationChannel;
-use App\Enums\NotificationPriority;
-use App\Enums\NotificationStatus;
+use App\Enums\NotificationChannelEnum;
+use App\Enums\NotificationPriorityEnum;
+use App\Enums\NotificationStatusEnum;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -32,20 +32,17 @@ class Notification extends Model
         'failed_at',
     ];
 
-    protected function casts(): array
-    {
-        return [
-            'channel' => NotificationChannel::class,
-            'priority' => NotificationPriority::class,
-            'status' => NotificationStatus::class,
-            'attempts' => 'integer',
-            'payload' => 'array',
-            'queued_at' => 'datetime',
-            'sent_at' => 'datetime',
-            'delivered_at' => 'datetime',
-            'failed_at' => 'datetime',
-        ];
-    }
+    protected $casts = [
+        'channel' => NotificationChannelEnum::class,
+        'priority' => NotificationPriorityEnum::class,
+        'status' => NotificationStatusEnum::class,
+        'attempts' => 'integer',
+        'payload' => 'array',
+        'queued_at' => 'datetime',
+        'sent_at' => 'datetime',
+        'delivered_at' => 'datetime',
+        'failed_at' => 'datetime',
+    ];
 
     public function bulk(): BelongsTo
     {

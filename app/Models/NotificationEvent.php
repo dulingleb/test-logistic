@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use App\Enums\NotificationStatus;
+use App\Enums\NotificationStatusEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -22,14 +22,11 @@ class NotificationEvent extends Model
         'occurred_at',
     ];
 
-    protected function casts(): array
-    {
-        return [
-            'status' => NotificationStatus::class,
-            'meta' => 'array',
-            'occurred_at' => 'datetime',
-        ];
-    }
+    protected $casts = [
+        'status' => NotificationStatusEnum::class,
+        'meta' => 'array',
+        'occurred_at' => 'datetime',
+    ];
 
     public function notification(): BelongsTo
     {

@@ -23,14 +23,11 @@ class IdempotencyKey extends Model
         'expires_at',
     ];
 
-    protected function casts(): array
-    {
-        return [
-            'response' => 'array',
-            'created_at' => 'datetime',
-            'expires_at' => 'datetime',
-        ];
-    }
+    protected $casts = [
+        'response' => 'array',
+        'created_at' => 'datetime',
+        'expires_at' => 'datetime',
+    ];
 
     public function bulk(): BelongsTo
     {

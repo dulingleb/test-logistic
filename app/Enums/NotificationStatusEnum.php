@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Enums;
 
-enum NotificationStatus: string
+enum NotificationStatusEnum: string
 {
     case Queued = 'queued';
     case Sent = 'sent';

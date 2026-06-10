@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
-use App\Enums\NotificationStatus;
+use App\Enums\NotificationStatusEnum;
 use App\Models\Notification;
 use App\Models\NotificationEvent;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -20,7 +20,7 @@ class NotificationEventFactory extends Factory
     {
         return [
             'notification_id' => Notification::factory(),
-            'status' => NotificationStatus::Queued,
+            'status' => NotificationStatusEnum::Queued,
             'meta' => null,
             'occurred_at' => now(),
         ];

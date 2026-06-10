@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Enums;
 
-enum NotificationChannel: string
+enum NotificationChannelEnum: string
 {
     case Sms = 'sms';
     case Email = 'email';
