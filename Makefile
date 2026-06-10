@@ -20,7 +20,8 @@ help:
 	@echo "  artisan      Run artisan (args=\"route:list\")"
 	@echo "  migrate      Run migrations"
 	@echo "  fresh        Drop and re-migrate"
-	@echo "  test         Run phpunit"
+	@echo "  test         Run phpunit (fast suite: sqlite + sync queue)"
+	@echo "  test-integration  Run integration suite against real pg/redis/rabbitmq"
 	@echo "  cache-clear  Clear config/route/cache"
 
 init:
@@ -70,6 +71,9 @@ fresh:
 
 test:
 	$(APP) php artisan test
+
+test-integration:
+	$(APP) php artisan test -c phpunit.integration.xml
 
 cache-clear:
 	$(APP) php artisan optimize:clear
