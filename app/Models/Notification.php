@@ -26,6 +26,7 @@ class Notification extends Model
         'attempts',
         'last_error',
         'payload',
+        'provider_message_id',
         'queued_at',
         'sent_at',
         'delivered_at',

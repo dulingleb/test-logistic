@@ -9,23 +9,32 @@ use App\Models\Notification;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
-final class SmsProvider implements NotificationProvider
+final class EmailProviderStub implements NotificationProvider
 {
+    use SimulatesAsyncDelivery;
+    use SimulatesFailures;
+    use SimulatesLatency;
+
     public function channel(): NotificationChannelEnum
     {
-        return NotificationChannelEnum::Sms;
+        return NotificationChannelEnum::Email;
     }
 
     public function send(Notification $notification, string $message): ProviderSendResult
     {
-        $providerMessageId = 'sms_'.Str::uuid()->toString();
+        $this->maybeFail('email');
+        $this->maybeDelay();
 
-        Log::info('sms provider stub send', [
+        $providerMessageId = 'email_'.Str::uuid()->toString();
+
+        Log::info('email provider stub send', [
             'notification_id' => $notification->id,
             'to' => $notification->recipient_id,
             'message' => $message,
             'provider_message_id' => $providerMessageId,
         ]);
+
+        $this->scheduleDeliveryCallback('email', $providerMessageId);
 
         return new ProviderSendResult($providerMessageId);
     }

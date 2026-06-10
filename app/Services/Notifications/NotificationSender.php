@@ -43,6 +43,7 @@ final class NotificationSender
                     ->send($notification, (string) $notification->bulk?->message);
             } catch (PermanentProviderException $e) {
                 $this->finalizeFailure($notification, $e->getMessage());
+                $deferred = $e;
 
                 return;
             } catch (Throwable $e) {
@@ -63,6 +64,7 @@ final class NotificationSender
             $now = Carbon::now();
             $notification->status = NotificationStatusEnum::Sent;
             $notification->sent_at = $now;
+            $notification->provider_message_id = $result->providerMessageId;
             $notification->last_error = null;
             $notification->save();
 
@@ -70,16 +72,6 @@ final class NotificationSender
                 'provider_message_id' => $result->providerMessageId,
                 'attempt' => $notification->attempts,
             ], $now);
-
-            if ((bool) config('notifications.simulate_delivery', false)) {
-                $notification->status = NotificationStatusEnum::Delivered;
-                $notification->delivered_at = $now;
-                $notification->save();
-
-                $this->logEvent($notification, NotificationStatusEnum::Delivered, [
-                    'simulated' => true,
-                ], $now);
-            }
         });
 
         if ($deferred !== null) {
