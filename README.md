@@ -149,6 +149,8 @@ make init
 
 ## API
 
+Postman-коллекция со всеми эндпоинтами: <https://www.postman.com/grey-moon-39144/workspace/test/collection/55683417-7b5c5a45-1d06-4c07-b640-da71fefc5c79?action=share&source=copy-link&creator=55683417>
+
 ### POST `/api/notifications/bulk`
 
 Приём массовой рассылки. Идемпотентен по `Idempotency-Key`.
