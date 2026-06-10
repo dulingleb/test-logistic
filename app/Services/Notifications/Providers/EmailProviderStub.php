@@ -27,11 +27,14 @@ final class EmailProviderStub implements NotificationProvider
 
         $providerMessageId = 'email_'.Str::uuid()->toString();
 
-        Log::info('email provider stub send', [
+        Log::channel('notifications')->info('provider.send', [
+            'event' => 'provider.send',
+            'provider' => 'email-stub',
+            'channel' => 'email',
             'notification_id' => $notification->id,
-            'to' => $notification->recipient_id,
-            'message' => $message,
+            'recipient_id' => $notification->recipient_id,
             'provider_message_id' => $providerMessageId,
+            'message_bytes' => strlen($message),
         ]);
 
         $this->scheduleDeliveryCallback('email', $providerMessageId);

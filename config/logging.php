@@ -58,6 +58,23 @@ return [
             'ignore_exceptions' => false,
         ],
 
+        'notifications' => [
+            'driver' => 'monolog',
+            'level' => env('LOG_LEVEL', 'debug'),
+            'handler' => Monolog\Handler\StreamHandler::class,
+            'handler_with' => [
+                'stream' => env('NOTIFICATIONS_LOG_STREAM', 'php://stderr'),
+            ],
+            'formatter' => Monolog\Formatter\JsonFormatter::class,
+            'formatter_with' => [
+                'batchMode' => Monolog\Formatter\JsonFormatter::BATCH_MODE_JSON,
+                'appendNewline' => true,
+            ],
+            'processors' => [
+                Monolog\Processor\PsrLogMessageProcessor::class,
+            ],
+        ],
+
         'single' => [
             'driver' => 'single',
             'path' => storage_path('logs/laravel.log'),

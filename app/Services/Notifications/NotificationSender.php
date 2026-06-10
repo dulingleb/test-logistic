@@ -11,6 +11,7 @@ use App\Models\NotificationEvent;
 use App\Services\Notifications\Providers\ProviderRegistry;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Throwable;
 
 final class NotificationSender
@@ -56,6 +57,15 @@ final class NotificationSender
                     'error' => $e->getMessage(),
                 ]);
 
+                Log::channel('notifications')->warning('notification.retry', [
+                    'event' => 'notification.retry',
+                    'notification_id' => $notification->id,
+                    'channel' => $notification->channel->value,
+                    'priority' => $notification->priority->value,
+                    'attempt' => $notification->attempts,
+                    'error' => $e->getMessage(),
+                ]);
+
                 $deferred = $e;
 
                 return;
@@ -72,6 +82,15 @@ final class NotificationSender
                 'provider_message_id' => $result->providerMessageId,
                 'attempt' => $notification->attempts,
             ], $now);
+
+            Log::channel('notifications')->info('notification.sent', [
+                'event' => 'notification.sent',
+                'notification_id' => $notification->id,
+                'channel' => $notification->channel->value,
+                'priority' => $notification->priority->value,
+                'attempt' => $notification->attempts,
+                'provider_message_id' => $result->providerMessageId,
+            ]);
         });
 
         if ($deferred !== null) {
@@ -104,6 +123,15 @@ final class NotificationSender
             'attempt' => $notification->attempts,
             'error' => $reason,
         ], $now);
+
+        Log::channel('notifications')->error('notification.failed', [
+            'event' => 'notification.failed',
+            'notification_id' => $notification->id,
+            'channel' => $notification->channel->value,
+            'priority' => $notification->priority->value,
+            'attempt' => $notification->attempts,
+            'error' => $reason,
+        ]);
     }
 
     /**

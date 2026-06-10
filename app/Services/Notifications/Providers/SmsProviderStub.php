@@ -27,11 +27,14 @@ final class SmsProviderStub implements NotificationProvider
 
         $providerMessageId = 'sms_'.Str::uuid()->toString();
 
-        Log::info('sms provider stub send', [
+        Log::channel('notifications')->info('provider.send', [
+            'event' => 'provider.send',
+            'provider' => 'sms-stub',
+            'channel' => 'sms',
             'notification_id' => $notification->id,
-            'to' => $notification->recipient_id,
-            'message' => $message,
+            'recipient_id' => $notification->recipient_id,
             'provider_message_id' => $providerMessageId,
+            'message_bytes' => strlen($message),
         ]);
 
         $this->scheduleDeliveryCallback('sms', $providerMessageId);

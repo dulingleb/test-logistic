@@ -35,7 +35,8 @@ final class DeadLetterNotificationJob implements ShouldQueue
 
     public function handle(): void
     {
-        Log::warning('notification dead-lettered (replayed)', [
+        Log::channel('notifications')->warning('notification.dlq_replayed', [
+            'event' => 'notification.dlq_replayed',
             'notification_id' => $this->notificationId,
             'reason' => $this->reason,
             'attempts' => $this->attempts,
